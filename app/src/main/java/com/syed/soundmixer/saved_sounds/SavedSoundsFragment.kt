@@ -47,6 +47,13 @@ class SavedSoundsFragment : Fragment() {
         return binding.root
     }
 
+    override fun onPause() {
+        selectedFiles.clear()
+        binding.mergeButton.isEnabled = false
+        adapter.updateSelectedFiles(selectedFiles)
+        super.onPause()
+    }
+
     override fun onResume() {
         loadSavedSounds()
         if (::adapter.isInitialized) {
