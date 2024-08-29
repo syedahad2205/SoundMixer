@@ -12,14 +12,12 @@ import com.syed.soundmixer.databinding.FragmentMergeBinding
 import com.syed.soundmixer.home.SharedViewModel
 import com.syed.soundmixer.room.SavedSound
 import com.syed.soundmixer.room.SavedSoundsDao
+import com.syed.soundmixer.sound.AudioMediaOperation
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 import java.io.IOException
-import java.io.RandomAccessFile
 import javax.inject.Inject
 
 class MergeFragment : Fragment() {
@@ -45,7 +43,7 @@ class MergeFragment : Fragment() {
 
         binding.mergeButton.setOnClickListener {
             if (!sharedViewModel.audioFile1.value.isNullOrEmpty() && !sharedViewModel.audioFile2.value.isNullOrEmpty()) {
-                mergeAudioFiles(
+                mergeAudioFilesUsingOperations(
                     sharedViewModel.audioFile1.value ?: "",
                     sharedViewModel.audioFile2.value ?: ""
                 )
@@ -74,54 +72,25 @@ class MergeFragment : Fragment() {
         super.onResume()
     }
 
-    private fun mergeAudioFiles(filePath1: String, filePath2: String) {
+    private fun mergeAudioFilesUsingOperations(filePath1: String, filePath2: String) {
         binding.progressBar.visibility = View.VISIBLE
         binding.mergeButton.isEnabled = false
 
         lifecycleScope.launch {
             try {
-                val outputFilePath = withContext(Dispatchers.IO) {
+                withContext(Dispatchers.IO) {
                     val outputFilePath = getOutputFilePath()
-                    val file1 = File(filePath1)
-                    val file2 = File(filePath2)
 
-                    if (!file1.exists() || !file2.exists()) {
-                        throw IOException("One or both files do not exist.")
-                    }
-
-                    FileInputStream(file1).use { inputStream1 ->
-                        FileInputStream(file2).use { inputStream2 ->
-                            FileOutputStream(outputFilePath).use { outputStream ->
-
-                                // Write the header from the first file to the output file
-                                val header1 = ByteArray(44)
-                                inputStream1.read(header1)
-                                outputStream.write(header1)
-
-                                // Copy the data from the first file to the output file
-                                val buffer = ByteArray(4096)
-                                var bytesRead: Int
-                                while (inputStream1.read(buffer).also { bytesRead = it } != -1) {
-                                    outputStream.write(buffer, 0, bytesRead)
-                                }
-
-                                // Skip the header of the second file (44 bytes)
-                                inputStream2.skip(44)
-
-                                // Append the data from the second file to the output file
-                                while (inputStream2.read(buffer).also { bytesRead = it } != -1) {
-                                    outputStream.write(buffer, 0, bytesRead)
-                                }
-
-                                updateWavHeader(outputFilePath)
-                            }
+                    AudioMediaOperation.mergeAudios(
+                        selection = arrayOf(filePath1, filePath2),
+                        outPath = outputFilePath,
+                        onSuccess = {
+                            saveMergedFileToDatabase(outputFilePath)
+                        }, onFailure = {
+                            Log.d("***", "failed")
                         }
-                    }
-
-                    outputFilePath
+                    )
                 }
-
-                saveMergedFileToDatabase(outputFilePath)
 
             } catch (e: IOException) {
                 Log.e("MergeFragment", "IOException during file merge: ${e.message}")
@@ -133,18 +102,6 @@ class MergeFragment : Fragment() {
                     binding.mergeButton.isEnabled = true
                 }
             }
-        }
-    }
-
-    private fun updateWavHeader(outputFilePath: String) {
-        RandomAccessFile(outputFilePath, "rw").use { raf ->
-            val totalAudioLen = raf.length() - 44
-            val totalDataLen = totalAudioLen + 36
-
-            raf.seek(4)
-            raf.writeInt(totalDataLen.toInt())
-            raf.seek(40)
-            raf.writeInt(totalAudioLen.toInt())
         }
     }
 
