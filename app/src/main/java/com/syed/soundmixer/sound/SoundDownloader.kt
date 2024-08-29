@@ -30,9 +30,6 @@ class SoundDownloader(
     ) {
         try {
             val response: Response<ResponseBody> = apiServiceNA.downloadSound(soundId, "Bearer $accessToken")
-            if (response.code() == 401){
-                //refresh token
-            }
             if (response.isSuccessful) {
                 val responseBody: ResponseBody = response.body() ?: throw Exception("Response body is null")
 
