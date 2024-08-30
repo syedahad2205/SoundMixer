@@ -18,6 +18,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -40,6 +41,9 @@ object AppModule {
                 chain.proceed(newRequest)
             }
             .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
             .build()
 
         return Retrofit.Builder()
@@ -65,6 +69,9 @@ object AppModule {
     fun provideOkHttpClient(): OkHttpClient {
         return OkHttpClient.Builder()
             .addNetworkInterceptor(HttpLoggingInterceptor().setLevel(HttpLoggingInterceptor.Level.BODY))
+            .connectTimeout(15, TimeUnit.SECONDS)
+            .readTimeout(120, TimeUnit.SECONDS)
+            .writeTimeout(120, TimeUnit.SECONDS)
             .build()
     }
 
@@ -87,10 +94,12 @@ object AppModule {
     fun provideSoundDownloader(
         @ApplicationContext context: Context,
         savedSoundsDao: SavedSoundsDao,
-        @NormalRetrofit apiServiceNa : ApiService
+        @NormalRetrofit apiServiceNa: ApiService
     ): SoundDownloader {
-        return SoundDownloader(context, savedSoundsDao = savedSoundsDao,
-            apiServiceNA = apiServiceNa)
+        return SoundDownloader(
+            context, savedSoundsDao = savedSoundsDao,
+            apiServiceNA = apiServiceNa
+        )
     }
 
     @Provides

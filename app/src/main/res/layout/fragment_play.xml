@@ -4,6 +4,7 @@
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="#757af7"
         android:padding="16dp">
 
         <ImageView
@@ -21,28 +22,36 @@
             android:id="@+id/soundName"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:textColor="@color/white"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toBottomOf="@id/soundImageView" />
 
-        <Button
+        <ImageButton
             android:id="@+id/playButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Play"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Play"
+            android:src="@drawable/ic_play_white"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toStartOf="@id/stopButton"
             app:layout_constraintStart_toStartOf="parent" />
 
-        <Button
+        <ImageButton
             android:id="@+id/stopButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:enabled="false"
-            android:text="Stop"
+            android:layout_marginHorizontal="5dp"
+            android:layout_marginBottom="40dp"
+            android:background="@android:color/transparent"
+            android:contentDescription="Download"
+            android:src="@drawable/ic_stop"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toEndOf="@id/playButton" />
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 </layout>

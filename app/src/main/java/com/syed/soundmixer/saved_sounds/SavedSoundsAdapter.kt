@@ -2,6 +2,7 @@ package com.syed.soundmixer.saved_sounds
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Color
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -29,9 +30,9 @@ class SavedSoundsAdapter(
         holder.fileNameTextView.text = savedSound.fileName
 
         if (selectedFiles.contains(savedSound.filePath)) {
-            holder.itemView.setBackgroundColor(context.getColor(R.color.light_gray))
+            holder.itemView.setBackgroundColor(Color.parseColor("#666BCA"))
         } else {
-            holder.itemView.setBackgroundColor(context.getColor(R.color.white))
+            holder.itemView.setBackgroundColor(Color.parseColor("#888ef9"))
         }
 
         holder.itemView.setOnClickListener {

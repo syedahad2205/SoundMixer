@@ -75,11 +75,17 @@ class SearchFragment : Fragment() {
 
     private fun observeViewModel(adapter: SearchAdapter) {
         viewModel.searchResults.observe(viewLifecycleOwner) { results ->
+            binding.progressBar.visibility = View.GONE
             adapter.submitList(results)
         }
 
         viewModel.loading.observe(viewLifecycleOwner) { isLoading ->
             binding.progressBar.visibility = if (isLoading) View.VISIBLE else View.GONE
+        }
+
+        viewModel.searchResultsError.observe(requireActivity()) {
+            binding.progressBar.visibility = View.GONE
+            Toast.makeText(requireContext(), it, Toast.LENGTH_SHORT).show()
         }
     }
 }

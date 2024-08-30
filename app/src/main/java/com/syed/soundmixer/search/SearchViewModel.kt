@@ -25,6 +25,9 @@ class SearchViewModel @Inject constructor(
     private val _searchResults = MutableLiveData<List<Sound>>()
     val searchResults: LiveData<List<Sound>> = _searchResults
 
+    private val _searchResultsError = MutableLiveData<String>()
+    val searchResultsError: LiveData<String> = _searchResultsError
+
     private val _loading = MutableLiveData<Boolean>()
     val loading: LiveData<Boolean> = _loading
 
@@ -42,7 +45,7 @@ class SearchViewModel @Inject constructor(
                 nextPageUrl = results.next
                 _searchResults.postValue(results.results)
             } catch (e: Exception) {
-                // Handle error
+                _searchResultsError.postValue(e.message)
             } finally {
                 _loading.postValue(false)
             }
@@ -62,6 +65,7 @@ class SearchViewModel @Inject constructor(
                 val updatedResults = _searchResults.value.orEmpty() + results.results
                 _searchResults.postValue(updatedResults)
             } catch (e: Exception) {
+                _searchResultsError.postValue(e.message)
             } finally {
                 _loading.postValue(false)
                 isFetchingNextPage = false
@@ -80,6 +84,7 @@ class SearchViewModel @Inject constructor(
                 )
                 onSuccess(response)
             } catch (e: Exception) {
+                _searchResultsError.postValue(e.message)
             }
         }
     }
