@@ -6,7 +6,6 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
-
 class VisualizerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
@@ -65,4 +64,10 @@ class VisualizerView @JvmOverloads constructor(
         amplitudes.add(lastAmplitude)
         invalidate()
     }
+
+    fun reset() {
+        amplitudes.clear()
+        invalidate()  // Redraw the view to clear it
+    }
 }
+

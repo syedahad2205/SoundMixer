@@ -18,13 +18,12 @@ import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import com.syed.soundmixer.databinding.FragmentRecordingBinding
 import com.syed.soundmixer.home.SharedViewModel
-import com.syed.soundmixer.sound.VisualizerView
 import com.syed.soundmixer.room.SavedSound
 import com.syed.soundmixer.room.SavedSoundsDao
+import com.syed.soundmixer.sound.VisualizerView
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
 import java.io.File
-import java.util.Locale
 import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
@@ -157,6 +156,9 @@ class RecordingFragment : Fragment() {
 
         isRecording = false
         binding.timerTextView.text = "00:00"
+
+        visualizerView.reset()
+
         lifecycleScope.launch {
             val fileName = File(filePath ?: "").name
             val savedSound =
