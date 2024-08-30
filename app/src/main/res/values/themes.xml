@@ -21,4 +21,9 @@
         screen. This is required. -->
         <item name="postSplashScreenTheme">@style/Theme.App.Starting</item>
     </style>
+
+    <style name="CustomProgressBar" parent="Widget.AppCompat.ProgressBar">
+        <item name="android:indeterminateDrawable">@drawable/progress_bar_style</item>
+    </style>
+
 </resources>
