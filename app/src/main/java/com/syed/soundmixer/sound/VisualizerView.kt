@@ -6,6 +6,8 @@ import android.graphics.Color
 import android.graphics.Paint
 import android.util.AttributeSet
 import android.view.View
+import kotlin.math.sin
+
 class VisualizerView @JvmOverloads constructor(
     context: Context,
     attrs: AttributeSet? = null
@@ -15,6 +17,7 @@ class VisualizerView @JvmOverloads constructor(
         color = Color.parseColor("#70bcf0")
         strokeWidth = 6f
         style = Paint.Style.STROKE
+        isAntiAlias = true
     }
 
     private val amplitudes = mutableListOf<Int>()
@@ -32,27 +35,25 @@ class VisualizerView @JvmOverloads constructor(
         val height = height.toFloat()
         val midHeight = height / 2
 
-        // Drawing waveform as a line
         val path = android.graphics.Path()
         val sectionWidth = width / (amplitudes.size - 1)
 
-        path.moveTo(0f, midHeight - normalizeAmplitude(amplitudes[0]))
+        path.moveTo(0f, midHeight)
 
         for (i in 1 until amplitudes.size) {
             val x = i * sectionWidth
-            val y = midHeight - normalizeAmplitude(amplitudes[i])
+            val y = midHeight - normalizeAmplitude(amplitudes[i]) * sin(i * Math.PI / amplitudes.size).toFloat()
             path.lineTo(x, y)
         }
 
-        // Draw line to the end to ensure the waveform ends correctly
         path.lineTo(width, midHeight)
         canvas.drawPath(path, paint)
     }
 
     private fun normalizeAmplitude(amplitude: Int): Float {
-        val maxAmplitude = 32767 // Max amplitude value for 16-bit PCM audio
+        val maxAmplitude = 32767
         val scaledAmplitude = amplitude.toFloat() / maxAmplitude
-        return scaledAmplitude * height / 2
+        return scaledAmplitude * height
     }
 
     fun updateAmplitude(amplitude: Int) {
@@ -67,7 +68,6 @@ class VisualizerView @JvmOverloads constructor(
 
     fun reset() {
         amplitudes.clear()
-        invalidate()  // Redraw the view to clear it
+        invalidate()
     }
 }
-
