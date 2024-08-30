@@ -4,9 +4,10 @@ import android.annotation.SuppressLint
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
+import com.syed.soundmixer.R
 import com.syed.soundmixer.databinding.ItemSoundBinding
-import com.syed.soundmixer.sound.SoundPlayer
 import com.syed.soundmixer.models.Sound
+import com.syed.soundmixer.sound.SoundPlayer
 
 
 class SearchAdapter(
@@ -39,13 +40,20 @@ class SearchAdapter(
         return SoundViewHolder(binding)
     }
 
-    override fun onBindViewHolder(holder: SoundViewHolder, @SuppressLint("RecyclerView") position: Int) {
+    override fun onBindViewHolder(
+        holder: SoundViewHolder,
+        @SuppressLint("RecyclerView") position: Int
+    ) {
         val sound = sounds[position]
         val isPlaying = position == currentlyPlayingPosition
         holder.bind(sound, isPlaying)
     }
 
-    override fun onBindViewHolder(holder: SoundViewHolder, position: Int, payloads: MutableList<Any>) {
+    override fun onBindViewHolder(
+        holder: SoundViewHolder,
+        position: Int,
+        payloads: MutableList<Any>
+    ) {
         if (payloads.isNotEmpty()) {
             val isPlaying = payloads[0] as Boolean
             holder.updatePlayButton(isPlaying)
@@ -56,7 +64,8 @@ class SearchAdapter(
 
     override fun getItemCount(): Int = sounds.size
 
-    inner class SoundViewHolder(val binding: ItemSoundBinding) : RecyclerView.ViewHolder(binding.root) {
+    inner class SoundViewHolder(val binding: ItemSoundBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
         init {
             binding.playButton.setOnClickListener {
@@ -92,7 +101,11 @@ class SearchAdapter(
         }
 
         fun updatePlayButton(isPlaying: Boolean) {
-            binding.playButton.text = if (isPlaying) "Stop" else "Play"
+            if (isPlaying) {
+                binding.playButton.setImageResource(R.drawable.ic_stop)
+            } else {
+                binding.playButton.setImageResource(R.drawable.ic_play_white)
+            }
         }
     }
 }
