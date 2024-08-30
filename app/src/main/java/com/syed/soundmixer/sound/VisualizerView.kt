@@ -13,7 +13,7 @@ class VisualizerView @JvmOverloads constructor(
 ) : View(context, attrs) {
 
     private val paint = Paint().apply {
-        color = Color.LTGRAY
+        color = Color.parseColor("#70bcf0")
         strokeWidth = 6f
         style = Paint.Style.STROKE
     }

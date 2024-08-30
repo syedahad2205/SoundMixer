@@ -61,12 +61,16 @@ class RecordingFragment : Fragment() {
     ): View {
         binding = FragmentRecordingBinding.inflate(inflater, container, false)
         visualizerView = binding.visualizerView
-
-        binding.recordButton.setOnClickListener {
+        binding.playButton.setOnClickListener {
             if (isRecording) {
                 stopRecording()
             } else {
                 checkAndRequestPermissions()
+            }
+        }
+        binding.stopButton.setOnClickListener {
+            if (isRecording) {
+                stopRecording()
             }
         }
         binding.timerTextView.text = "00:00"
@@ -101,7 +105,6 @@ class RecordingFragment : Fragment() {
                 prepare()
                 start()
                 isRecording = true
-                binding.recordButton.text = "Stop"
                 startTime = System.currentTimeMillis()
 
                 val minBufferSize = AudioRecord.getMinBufferSize(
@@ -153,7 +156,6 @@ class RecordingFragment : Fragment() {
         handler.removeCallbacks(updateTimerRunnable)
 
         isRecording = false
-        binding.recordButton.text = "Start"
         binding.timerTextView.text = "00:00"
         lifecycleScope.launch {
             val fileName = File(filePath ?: "").name
