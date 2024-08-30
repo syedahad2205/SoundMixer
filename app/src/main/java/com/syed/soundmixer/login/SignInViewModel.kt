@@ -54,10 +54,6 @@ class SignInViewModel(application: Application) : AndroidViewModel(application) 
                 }
             }
     }
-
-    companion object {
-        const val RC_SIGN_IN = 9001
-    }
 }
 
 sealed class SignInState {
