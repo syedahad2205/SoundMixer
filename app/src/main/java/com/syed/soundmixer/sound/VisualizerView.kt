@@ -42,8 +42,11 @@ class VisualizerView @JvmOverloads constructor(
 
         for (i in 1 until amplitudes.size) {
             val x = i * sectionWidth
-            val y = midHeight - normalizeAmplitude(amplitudes[i]) * sin(i * Math.PI / amplitudes.size).toFloat()
-            path.lineTo(x, y)
+            val normalizedAmplitude = normalizeAmplitude(amplitudes[i])
+            val yUp = midHeight - normalizedAmplitude * sin(i * Math.PI / amplitudes.size).toFloat()
+            val yDown = midHeight + normalizedAmplitude * sin(i * Math.PI / amplitudes.size).toFloat()
+            path.lineTo(x, yUp)
+            path.lineTo(x, yDown)
         }
 
         path.lineTo(width, midHeight)
@@ -53,7 +56,7 @@ class VisualizerView @JvmOverloads constructor(
     private fun normalizeAmplitude(amplitude: Int): Float {
         val maxAmplitude = 32767
         val scaledAmplitude = amplitude.toFloat() / maxAmplitude
-        return scaledAmplitude * height
+        return scaledAmplitude * height / 2
     }
 
     fun updateAmplitude(amplitude: Int) {

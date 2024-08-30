@@ -84,7 +84,7 @@
                 android:layout_height="72dp"
                 android:layout_marginEnd="24dp"
                 android:background="@drawable/circle_button_background"
-                android:src="@drawable/ic_play"
+                android:src="@drawable/ic_play_white"
                 android:contentDescription="Play"
                 android:scaleType="centerInside"/>
 
